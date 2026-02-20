@@ -1,13 +1,188 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+.card.is-clickable {
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.card.is-clickable:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 35px rgba(0,0,0,0.25);
+}
+
+.icon {
+  color: #363636;
+  transition: transform 0.15s ease, color 0.15s ease;
+}
+
+.icon:hover {
+  transform: translateY(-2px);
+  color: #3273dc; /* Bulma link blue */
+}
+
+/* --- Timeline layout --- */
+.timeline {
+  position: relative;
+  margin-top: 2rem;
+  padding: 1rem 0;
+}
+
+.timeline-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.timeline-item {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 40px 1fr;
+  align-items: start;
+  margin: 1.25rem 0;
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 500ms ease, transform 500ms ease;
+}
+
+.timeline-item.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.timeline-item.left .timeline-card {
+  grid-column: 1;
+}
+
+.timeline-item.right .timeline-card {
+  grid-column: 3;
+}
+
+.timeline-dot {
+  grid-column: 2;
+  justify-self: center;
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  background: #00d1b2; /* Bulma primary-ish */
+  box-shadow: 0 0 0 6px rgba(0, 209, 178, 0.18);
+  margin-top: 14px;
+  animation: pulse 1.8s infinite;
+}
+
+.timeline-card {
+  border-radius: 14px;
+}
+
+/* subtle pulsing dot */
+@keyframes pulse {
+  0%   { transform: scale(1);   opacity: 1; }
+  50%  { transform: scale(1.08); opacity: 0.85; }
+  100% { transform: scale(1);   opacity: 1; }
+}
+
+/* --- Mobile: single column timeline --- */
+@media (max-width: 768px) {
+  .timeline-line {
+    left: 18px;
+    transform: none;
+  }
+
+  .timeline-item {
+    grid-template-columns: 40px 1fr;
+  }
+
+  .timeline-dot {
+    grid-column: 1;
+    justify-self: center;
+  }
+
+  .timeline-item.left .timeline-card,
+  .timeline-item.right .timeline-card {
+    grid-column: 2;
+  }
+}
+
+
+/* Make vis-timeline feel like Bulma */
+.vis-timeline {
+  border: none;
+  background: transparent;
+}
+
+.vis-panel.vis-top,
+.vis-panel.vis-center,
+.vis-panel.vis-bottom {
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+.vis-time-axis .vis-text {
+  font-size: 12px;
+}
+
+.vis-time-axis .vis-text.vis-major {
+  font-weight: 600;
+}
+
+/* Your experience bars */
+.vis-item.vis-item-theo {
+  border-radius: 12px;
+  border: 1px solid rgba(0, 209, 178, 0.35);
+  background: rgba(0, 209, 178, 0.35);
+  box-shadow: 0 0 0 2px rgba(0, 209, 178, 0.22);
+}
+
+.vis-item.vis-item-theo .vis-item-content {
+  padding: 6px 10px;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Hover */
+.vis-item.vis-item-theo:hover {
+  background: rgba(0, 209, 178, 0.28);
+}
+
+/* Tooltip */
+.vis-tooltip {
+  border-radius: 10px;
+  border: 1px solid rgba(0,0,0,0.08);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+}
+
+/* Customize vis */
+
+.vis-panel .vis-grid.vis-vertical.vis-major{
+  width: 1px !important;
+  background: rgba(255, 255, 255, 0.22) !important;
+}
+
+.vis-panel .vis-grid.vis-vertical.vis-minor{
+  width: 1px !important;
+
+  /* kill the built-in solid line */
+  background: none !important;
+
+  /* draw dots using a repeating background */
+  background-image: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.18) 1px,
+    transparent 1.5px
+  ) !important;
+
+  background-size: 1px 8px !important;     /* dot spacing */
+  background-repeat: repeat-y !important;
+  background-position: center top !important;
+
+  opacity: 0.8 !important;                 /* overall faintness */
+}
+
+.vis-panel .vis-grid.vis-vertical.vis-minor{
+  border-left: none !important;
+}
+.vis-panel .vis-grid.vis-vertical.vis-major{
+  border-left: none !important;
 }
