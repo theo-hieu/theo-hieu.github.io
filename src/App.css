@@ -237,7 +237,7 @@
   .hero-section { min-height: calc(100svh - 64px); padding: 64px 0 260px; }
   .hero-content h1 { font-size: clamp(3rem, 8vw, 4.8rem); }
   .bird-scene { max-width: 580px; margin-inline: auto; }
-  .bird-bubble { font-size: clamp(.7rem, 2vw, .9rem); }
+  .bird-bubble { top: calc(100% + 8px); bottom: auto; border-radius: 4px 16px 16px; font-size: clamp(.7rem, 2vw, .9rem); }
   .countryside-sky { top: auto; bottom: 400px; right: 6%; width: 125px; }
   .countryside-fields { height: 260px; min-height: 0; }
   .countryside-barn { width: 190px; right: 5%; bottom: 65px; }

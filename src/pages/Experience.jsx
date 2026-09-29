@@ -91,7 +91,7 @@ export default function Experience() {
     <section className="page-section section-divider" id="experience">
       <div className="site-container">
         <div className="experience-heading">
-          <div className="page-heading"><p className="eyebrow">Career path</p><h2>Experience</h2><p>Building software and learning tools where reliability, clarity, and patient outcomes matter.</p></div>
+          <div className="page-heading"><h2>Experience</h2></div>
           <div className="segmented-control" role="group" aria-label="Experience display"><button className={view === "cards" ? "is-active" : ""} type="button" aria-pressed={view === "cards"} onClick={() => setView("cards")}>Detailed cards</button><button className={view === "overlap" ? "is-active" : ""} type="button" aria-pressed={view === "overlap"} onClick={() => setView("overlap")}>Overlap timeline</button></div>
         </div>
         {view === "cards" ? <div className="timeline"><div className="timeline-line" aria-hidden="true" />{experiences.map((item, index) => <ExperienceCard item={item} index={index} key={item.id} />)}</div> : <OverlapTimeline items={experiences} />}

@@ -7,9 +7,7 @@ export default function Projects() {
     <section className="page-section section-divider" id="projects">
       <div className="site-container projects-container">
         <div className="page-heading">
-          <p className="eyebrow">Selected work</p>
           <h2>Projects</h2>
-          <p>Software, simulations, and hands-on tools designed around real needs.</p>
         </div>
         <div className="project-grid">
           {projects.map((project) => (

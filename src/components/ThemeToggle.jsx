@@ -5,7 +5,7 @@ const STORAGE_KEY = "theo-portfolio-theme";
 function getInitialTheme() {
   const savedTheme = localStorage.getItem(STORAGE_KEY);
   if (savedTheme === "light" || savedTheme === "dark") return savedTheme;
-  return "light";
+  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }
 
 export default function ThemeToggle() {
