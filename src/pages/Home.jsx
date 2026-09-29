@@ -1,71 +1,31 @@
-import { Link } from "react-router-dom";
-import Navbar from "../components/Navbar";
+import BirdsOnWire from "../components/BirdsOnWire";
+import Countryside from "../components/Countryside";
+import "../App.css";
 
 export default function Home() {
   return (
-    <>
-      <Navbar />
-
-      <section className="hero is-fullheight-with-navbar">
-        <div className="hero-body">
-          <div className="container">
-            <div className="is-flex is-align-items-center is-flex-wrap-wrap">
-              <h1 className="title is-1 mr-5 mb-0">Hi, I'm Theo.</h1>
-
-              <a
-                href="https://www.linkedin.com/in/theodore-n"
-                target="_blank"
-                rel="noreferrer"
-                className="icon is-large mr-5"
-                aria-label="LinkedIn"
-              >
-                <i className="fa-brands fa-linkedin fa-3x"></i>
+    <section className="hero-section" id="home">
+      <Countryside />
+      <div className="site-container hero-content">
+        <div className="hero-introduction">
+          <div className="hero-heading-row">
+            <h1>Hi! I&apos;m Theo.</h1>
+            <div className="hero-socials" aria-label="Social links">
+              <a href="https://www.linkedin.com/in/theodore-n" target="_blank" rel="noreferrer" aria-label="LinkedIn">
+                <i className="fa-brands fa-linkedin" aria-hidden="true" />
               </a>
-
-              <a
-                href="https://github.com/theo-hieu"
-                target="_blank"
-                rel="noreferrer"
-                className="icon is-large"
-                aria-label="GitHub"
-              >
-                <i className="fa-brands fa-github fa-3x"></i>
+              <a href="https://github.com/theo-hieu" target="_blank" rel="noreferrer" aria-label="GitHub">
+                <i className="fa-brands fa-github" aria-hidden="true" />
               </a>
-            </div>
-
-            <p className="subtitle is-4">
-              Welcome to my portfolio. Explore my projects or download my
-              resume.
-            </p>
-
-            <div className="buttons">
-              <Link className="button is-link" to="/projects">
-                View Projects
-              </Link>
-
-              <Link className="button is-info is-light" to="/experience">
-                View Experience
-              </Link>
-
-              <a
-                className="button is-light"
-                href="/Theodore_Nguyen_Resume.pdf"
-                download
-              >
-                Download Resume
-              </a>
-            </div>
-
-            <div className="content mt-5" style={{ maxWidth: 720 }}>
-              <p>
-                Hello! I'm a first year master's student at the University of
-                Minnesota with an interest in the intersection between computer
-                science and healthcare.
-              </p>
             </div>
           </div>
+          <p className="hero-copy">
+            I&apos;m a master&apos;s student at the University of Minnesota interested in
+            the intersection of computer science and healthcare.
+          </p>
         </div>
-      </section>
-    </>
+        <BirdsOnWire />
+      </div>
+    </section>
   );
 }

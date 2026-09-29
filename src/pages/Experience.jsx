@@ -1,239 +1,101 @@
-// src/pages/Experience.jsx
 import { useEffect, useMemo, useRef, useState } from "react";
-import Navbar from "../components/Navbar";
-import { experiences } from "../data/experience";
-import { Link } from "react-router-dom";
-
 import { DataSet } from "vis-data";
 import { Timeline } from "vis-timeline/standalone";
+import { experiences } from "../data/experience";
 
-// ---------- Stacked (card) timeline item ----------
-function TimelineItem({ item, index }) {
-  const ref = useRef(null);
+function CompanyIcon({ item }) {
+  if (!item.companyIcon) return null;
 
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
+  return <img className="company-icon" src={`${import.meta.env.BASE_URL}${item.companyIcon}`} alt="" width="36" height="36" loading="lazy" />;
+}
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) el.classList.add("is-visible");
-      },
-      { threshold: 0.15 }
-    );
-
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
+function ExperienceDetails({ item, compact = false }) {
   return (
-    <div
-      ref={ref}
-      className={`timeline-item ${index % 2 === 0 ? "left" : "right"}`}
-    >
-      <div className="timeline-dot" aria-hidden="true" />
-      <div className="timeline-card box">
-        <p className="has-text-grey is-size-7 mb-2">
-          {item.start} — {item.end} • {item.location}
-        </p>
-
-        <h2 className="title is-5 mb-1">{item.role}</h2>
-        <p className="subtitle is-6 mt-0">{item.company}</p>
-
-        {item.description ? <p className="mb-3">{item.description}</p> : null}
-
-        {item.bullets?.length ? (
-          <ul>
-            {item.bullets.map((b, i) => (
-              <li key={i}>{b}</li>
-            ))}
-          </ul>
-        ) : null}
-
-        {item.tags?.length ? (
-          <div className="tags mt-3">
-            {item.tags.map((t) => (
-              <span key={t} className="tag is-dark">
-                {t}
-              </span>
-            ))}
-          </div>
-        ) : null}
-      </div>
+    <div className={compact ? "experience-card timeline-selection" : "experience-card"}>
+      <p className="experience-meta">{item.start} - {item.end} / {item.location}</p>
+      <h3>{item.role}</h3>
+      <p className="experience-company"><CompanyIcon item={item} /><span>{item.company}</span></p>
+      {item.description ? <p>{item.description}</p> : null}
+      {item.bullets?.length ? <ul>{item.bullets.map((bullet) => <li key={bullet}>{bullet}</li>)}</ul> : null}
+      {item.tags?.length ? <div className="tag-list">{item.tags.map((tag) => <span className="tag" key={tag}>{tag}</span>)}</div> : null}
     </div>
   );
 }
 
-// ---------- Vis Timeline Overlap View (month-only axis) ----------
-function VisOverlapTimeline({ items }) {
+function ExperienceCard({ item, index }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => entry.isIntersecting && ref.current?.classList.add("is-visible"), { threshold: 0.15 });
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, []);
+  return <article ref={ref} className={`timeline-item ${index % 2 ? "right" : "left"}`}><div className="timeline-dot" aria-hidden="true" /><ExperienceDetails item={item} /></article>;
+}
+
+function OverlapTimeline({ items }) {
   const containerRef = useRef(null);
   const timelineRef = useRef(null);
-
-  // Snap a date to the first day of its month (prevents time-of-day showing up)
-  const snapToMonth = (d) => new Date(d.getFullYear(), d.getMonth(), 1);
+  const [selectedId, setSelectedId] = useState(items[0].id);
+  const [hoveredId, setHoveredId] = useState(null);
+  const activeItem = items.find((item) => item.id === (hoveredId || selectedId)) || items[0];
 
   const { visItems, rangeStart, rangeEnd } = useMemo(() => {
     const now = new Date();
-
-    const visItems = items
-      .map((e) => {
-        if (!e.startDate) return null;
-
-        const startRaw = new Date(e.startDate);
-        const endRaw = e.endDate ? new Date(e.endDate) : now;
-
-        if (Number.isNaN(startRaw.getTime()) || Number.isNaN(endRaw.getTime()))
-          return null;
-
-        const start = snapToMonth(startRaw);
-        const end = snapToMonth(endRaw);
-
-        // Title-only on the bar; tooltip is month/year text only (no GMT time)
-        const content = e.role;
-        const title = `${e.role} — ${e.company}<br/>${e.start} — ${e.end}`;
-
-        return {
-          id: e.id,
-          content,
-          start,
-          end,
-          title,
-          type: "range",
-          className: "vis-item-theo",
-        };
-      })
-      .filter(Boolean);
-
-    const min = new Date(Math.min(...visItems.map((x) => x.start.getTime())));
-    const max = new Date(Math.max(...visItems.map((x) => x.end.getTime())));
-
-    // pad the visible window by 2 months on both sides
-    const paddedMin = new Date(min.getFullYear(), min.getMonth() - 2, 1);
-    const paddedMax = new Date(max.getFullYear(), max.getMonth() + 2, 1);
-
-    return { visItems, rangeStart: paddedMin, rangeEnd: paddedMax };
+    const snapToMonth = (date) => new Date(date.getFullYear(), date.getMonth(), 1);
+    const timelineItems = items.map((item) => ({
+      id: item.id,
+      content: item.role,
+      start: snapToMonth(new Date(item.startDate)),
+      end: snapToMonth(item.endDate ? new Date(item.endDate) : now),
+      title: `${item.role} - ${item.company}`,
+      type: "range",
+      className: "vis-item-theo",
+    }));
+    const start = new Date(Math.min(...timelineItems.map((item) => item.start.getTime())));
+    const end = new Date(Math.max(...timelineItems.map((item) => item.end.getTime())));
+    return { visItems: timelineItems, rangeStart: new Date(start.getFullYear(), start.getMonth() - 2, 1), rangeEnd: new Date(end.getFullYear(), end.getMonth() + 2, 1) };
   }, [items]);
 
   useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
+    if (!containerRef.current) return undefined;
+    const options = { stack: true, selectable: true, orientation: "top", start: rangeStart, end: rangeEnd, timeAxis: { scale: "month", step: 1 }, zoomMin: 1000 * 60 * 60 * 24 * 28, zoomMax: 1000 * 60 * 60 * 24 * 365 * 10, showCurrentTime: false, format: { minorLabels: { month: "MMM" }, majorLabels: { year: "YYYY" } }, horizontalScroll: true, zoomKey: "ctrlKey", margin: { item: 12, axis: 10 } };
+    const timeline = new Timeline(containerRef.current, new DataSet(visItems), options);
+    timelineRef.current = timeline;
+    timeline.on("select", ({ items: selectedItems }) => selectedItems[0] && setSelectedId(selectedItems[0]));
+    timeline.on("itemover", ({ item }) => setHoveredId(item));
+    timeline.on("itemout", () => setHoveredId(null));
+    timeline.setSelection([items[0].id]);
+    return () => timeline.destroy();
+  }, [visItems, rangeStart, rangeEnd, items]);
 
-    // Destroy previous instance (toggle/hot reload safety)
-    if (timelineRef.current) {
-      timelineRef.current.destroy();
-      timelineRef.current = null;
-    }
-
-    const dataset = new DataSet(visItems);
-
-    const options = {
-      // Core
-      stack: true, // overlaps go into separate rows automatically
-      orientation: "top",
-      start: rangeStart,
-      end: rangeEnd,
-
-      // Make the axis MONTH-ONLY (prevents day/hour ticks)
-      timeAxis: { scale: "month", step: 1 },
-
-      // Prevent zooming into days/hours
-      zoomMin: 1000 * 60 * 60 * 24 * 28, // ~1 month
-      zoomMax: 1000 * 60 * 60 * 24 * 365 * 10, // 10 years
-
-      // Remove the red "current time" line and its time label
-      showCurrentTime: false,
-
-      // Labels (use month + year only)
-      showMajorLabels: true,
-      showMinorLabels: true,
-      // vis-timeline expects moment-style tokens here; this keeps it clean
-      format: {
-        minorLabels: { month: "MMM" }, // Jan, Feb, ...
-        majorLabels: { year: "YYYY" }, // 2023, 2024, ...
-      },
-
-      // UX
-      horizontalScroll: true,
-      zoomKey: "ctrlKey",
-      margin: { item: 12, axis: 10 },
-      tooltip: { followMouse: true, overflowMethod: "flip" },
-    };
-
-    timelineRef.current = new Timeline(el, dataset, options);
-
-    // Optional: keep it at a sensible zoom so month labels look good
-    // (comment out if you don’t want it)
-    timelineRef.current.setWindow(rangeStart, rangeEnd, { animation: false });
-
-    return () => {
-      if (timelineRef.current) {
-        timelineRef.current.destroy();
-        timelineRef.current = null;
-      }
-    };
-  }, [visItems, rangeStart, rangeEnd]);
+  const chooseExperience = (id) => {
+    setSelectedId(id);
+    timelineRef.current?.setSelection([id], { focus: false });
+  };
 
   return (
-    <div className="box">
-      <p className="has-text-grey is-size-7 mb-3">
-        Tip: Scroll horizontally; Ctrl + mousewheel to zoom.
-      </p>
-      <div ref={containerRef} style={{ height: 360 }} />
-    </div>
+    <section className="overlap-timeline">
+      <p className="timeline-tip">Hover or click a role to see its details. Scroll horizontally to explore.</p>
+      <div ref={containerRef} className="vis-container" />
+      <div className="timeline-choices" aria-label="Choose an experience">
+        {items.map((item) => <button type="button" className={item.id === selectedId ? "is-active" : ""} onClick={() => chooseExperience(item.id)} key={item.id}><CompanyIcon item={item} /><span>{item.company}</span></button>)}
+      </div>
+      <ExperienceDetails item={activeItem} compact />
+    </section>
   );
 }
 
 export default function Experience() {
-  const [view, setView] = useState("cards"); // "cards" | "overlap"
-
+  const [view, setView] = useState("cards");
   return (
-    <>
-      <Navbar />
-
-      <section className="section">
-        <div className="container">
-          <div className="is-flex is-justify-content-space-between is-align-items-center is-flex-wrap-wrap">
-            <div>
-              <h1 className="title mb-1">Experience</h1>
-              <p className="subtitle mb-0">
-                Toggle between detailed cards and an overlap timeline.
-              </p>
-            </div>
-
-            <div className="buttons has-addons mt-3">
-              <button
-                className={`button ${view === "cards" ? "is-link" : ""}`}
-                onClick={() => setView("cards")}
-              >
-                Cards
-              </button>
-              <button
-                className={`button ${view === "overlap" ? "is-link" : ""}`}
-                onClick={() => setView("overlap")}
-              >
-                Overlap Timeline
-              </button>
-            </div>
-          </div>
-
-          {view === "cards" ? (
-            <div className="timeline">
-              <div className="timeline-line" aria-hidden="true" />
-              {experiences.map((e, idx) => (
-                <TimelineItem key={e.id} item={e} index={idx} />
-              ))}
-            </div>
-          ) : (
-            <VisOverlapTimeline items={experiences} />
-          )}
-
-          <div className="mt-5">
-            <Link className="button is-text" to="/">
-              ← Back Home
-            </Link>
-          </div>
+    <section className="page-section section-divider" id="experience">
+      <div className="site-container">
+        <div className="experience-heading">
+          <div className="page-heading"><p className="eyebrow">Career path</p><h2>Experience</h2><p>Building software and learning tools where reliability, clarity, and patient outcomes matter.</p></div>
+          <div className="segmented-control" role="group" aria-label="Experience display"><button className={view === "cards" ? "is-active" : ""} type="button" aria-pressed={view === "cards"} onClick={() => setView("cards")}>Detailed cards</button><button className={view === "overlap" ? "is-active" : ""} type="button" aria-pressed={view === "overlap"} onClick={() => setView("overlap")}>Overlap timeline</button></div>
         </div>
-      </section>
-    </>
+        {view === "cards" ? <div className="timeline"><div className="timeline-line" aria-hidden="true" />{experiences.map((item, index) => <ExperienceCard item={item} index={index} key={item.id} />)}</div> : <OverlapTimeline items={experiences} />}
+      </div>
+    </section>
   );
 }

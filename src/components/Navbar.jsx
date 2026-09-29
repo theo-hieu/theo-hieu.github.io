@@ -1,28 +1,20 @@
-import { Link } from "react-router-dom";
+import ThemeToggle from "./ThemeToggle";
 
 export default function Navbar() {
   return (
-    <nav
-      className="navbar is-dark"
-      role="navigation"
-      aria-label="main navigation"
-    >
-      <div className="navbar-brand">
-        <Link className="navbar-item has-text-weight-semibold" to="/">
-          Home
-        </Link>
-      </div>
-
-      <div className="navbar-menu is-active">
-        <div className="navbar-end">
-          <Link className="navbar-item" to="/projects">
-            Projects
-          </Link>
-          <Link className="navbar-item" to="/experience">
-            Experience
-          </Link>
+    <header className="site-header">
+      <nav className="site-nav site-container" aria-label="Main navigation">
+        <a className="brand" href="#home" aria-label="Theo Nguyen home">
+          <span>Theo Nguyen</span>
+        </a>
+        <div className="nav-actions">
+          <div className="nav-links">
+            <a href="#projects">Projects</a>
+            <a href="#experience">Experience</a>
+          </div>
+          <ThemeToggle />
         </div>
-      </div>
-    </nav>
+      </nav>
+    </header>
   );
 }

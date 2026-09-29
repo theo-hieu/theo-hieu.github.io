@@ -1,14 +1,34 @@
 // src/data/experience.js
 export const experiences = [
   {
+    id: "medtronic-swe-intern",
+    role: "Software Engineering Intern",
+    company: "Medtronic",
+    companyIcon: "companies/medtronic.png",
+    location: "Newton, MA",
+    start: "May 2026",
+    end: "Aug 2026",
+    startDate: "2026-05-01",
+    endDate: "2026-08-31",
+    description:
+      "Built a cloud data pipeline, natural-language analytics tools, and interactive visualizations for a large case dataset.",
+    bullets: [
+      "Engineered a data post-processing pipeline to extract, merge, and transform .h5 and .case files from AWS S3 into CSVs, processing more than 2,000 cases for storage in Amazon Aurora.",
+      "Developed a text-to-SQL chatbot using AWS Bedrock and LangGraph, with Pydantic schema validation and SQLAlchemy query construction.",
+      "Built a React frontend with Apache ECharts and ECharts-GL to render customized 2D and 3D visualizations from chat prompts.",
+    ],
+    tags: ["AWS S3", "Aurora", "Bedrock", "LangGraph", "React", "ECharts"],
+  },
+  {
     id: "daikin-cloud-intern",
     role: "Software Engineering Intern (Cloud)",
     company: "Daikin Applied Americas",
+    companyIcon: "companies/daikin.png",
     location: "Plymouth, MN",
     start: "May 2025",
-    end: "Present",
+    end: "Apr 2026",
     startDate: "2025-05-01",
-    endDate: null, // null = Present
+    endDate: "2026-04-30",
     description:
       "Worked on cloud services and internal developer tooling to improve reuse, reliability, and integration across teams.",
     bullets: [
@@ -22,6 +42,7 @@ export const experiences = [
     id: "bracco-swe-intern",
     role: "Software Engineering Intern",
     company: "Bracco Medical Technologies",
+    companyIcon: "companies/bracco.png",
     location: "Eden Prairie, MN",
     start: "May 2024",
     end: "Aug 2024",
@@ -50,6 +71,7 @@ export const experiences = [
     id: "bakken-3d-specialist",
     role: "3D Printing and Segmentation Specialist",
     company: "Earl E. Bakken Medical Devices Center",
+    companyIcon: "companies/umn.png",
     location: "Minneapolis, MN",
     start: "Jun 2023",
     end: "Present",
@@ -68,6 +90,7 @@ export const experiences = [
     id: "bakken-research-assistant-mr",
     role: "Research Assistant",
     company: "Earl E. Bakken Medical Devices Center",
+    companyIcon: "companies/umn.png",
     location: "Minneapolis, MN",
     start: "Feb 2024",
     end: "Oct 2024",
@@ -85,6 +108,7 @@ export const experiences = [
     id: "bakken-undergrad-ra-vr-trainer",
     role: "Undergraduate Research Assistant",
     company: "Earl E. Bakken Medical Devices Center",
+    companyIcon: "companies/umn.png",
     location: "Minneapolis, MN",
     start: "Jun 2023",
     end: "Jan 2024",
@@ -102,11 +126,12 @@ export const experiences = [
     id: "sase-labs-codirector",
     role: "Labs Co-Director",
     company: "Society of Asian Student Engineers (SASE)",
+    companyIcon: "companies/sase.png",
     location: "University of Minnesota – Twin Cities",
     start: "Oct 2023",
-    end: "Present",
+    end: "May 2026",
     startDate: "2023-10-01",
-    endDate: null,
+    endDate: "2026-05-31",
     description:
       "Led and mentored a student team to design and build an engineering project each year.",
     bullets: [

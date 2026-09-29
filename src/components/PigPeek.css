@@ -1,0 +1,92 @@
+.project-grid {
+  row-gap: 76px;
+  padding-top: 16px;
+}
+
+.project-card-wrapper {
+  --pig-x: -50%;
+  --pig-y: -48px;
+  --pig-angle: 0deg;
+  position: relative;
+  isolation: isolate;
+  min-width: 0;
+}
+
+.project-card-wrapper > .project-card {
+  position: relative;
+  z-index: 1;
+}
+
+.pig-peek {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 64px;
+  height: 64px;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, 0) rotate(var(--pig-angle));
+  transition: transform 250ms cubic-bezier(.2, .8, .3, 1.15), opacity 150ms ease;
+}
+
+.project-card-wrapper:has(:focus-visible) > .pig-peek {
+  opacity: 1;
+  transform: translate(var(--pig-x), var(--pig-y)) rotate(var(--pig-angle));
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .project-card-wrapper:hover > .pig-peek {
+    opacity: 1;
+    transform: translate(var(--pig-x), var(--pig-y)) rotate(var(--pig-angle));
+  }
+}
+
+/* Only use the outer edges when there is enough viewport clearance. */
+@media (min-width: 1241px) {
+  .project-card-wrapper:nth-child(3n + 1) {
+    --pig-x: -48px;
+    --pig-y: -50%;
+    --pig-angle: -90deg;
+  }
+
+  .project-card-wrapper:nth-child(3n) {
+    --pig-x: 48px;
+    --pig-y: -50%;
+    --pig-angle: 90deg;
+  }
+
+  .project-card-wrapper:nth-child(3n + 1) > .pig-peek,
+  .project-card-wrapper:nth-child(3n) > .pig-peek {
+    top: 33%;
+    left: 0;
+    transform: translate(0, -50%) rotate(var(--pig-angle));
+  }
+
+  .project-card-wrapper:nth-child(3n) > .pig-peek {
+    left: auto;
+    right: 0;
+  }
+
+  .project-card-wrapper:has(:focus-visible) > .pig-peek {
+    transform: translate(var(--pig-x), var(--pig-y)) rotate(var(--pig-angle));
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .project-card-wrapper:hover > .pig-peek {
+      transform: translate(var(--pig-x), var(--pig-y)) rotate(var(--pig-angle));
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pig-peek,
+  .project-card-wrapper > .project-card,
+  .project-card-wrapper .project-image img {
+    transition: none;
+  }
+
+  .project-card-wrapper > .project-card:hover,
+  .project-card-wrapper .project-card:hover .project-image img {
+    transform: none;
+  }
+}

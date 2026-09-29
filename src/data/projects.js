@@ -1,5 +1,37 @@
 export const projects = [
   {
+    slug: "icu-readmission",
+    title: "Identifying 30-Day Readmission for High-Risk ICU Patients",
+    short:
+      "Compared clinical machine-learning models to identify high-risk ICU patients likely to be readmitted within 30 days.",
+    description:
+      "Built a patient-level readmission prediction workflow using MIMIC-III data, combining admission context, physiologic aggregates, and the first 24 hours of ICU vital signs to identify 30-day non-elective readmissions.",
+    images: ["/projects/icu-readmission-workflow.png"],
+    tags: ["MIMIC-III", "Machine Learning", "XGBoost", "GRU"],
+    bullets: [
+      "Constructed an adult ICU cohort with patient-level splitting, 30-day readmission labels, and leakage-safe evaluation.",
+      "Benchmarked Logistic Regression, Linear SVM, Random Forest, and XGBoost models on static and aggregate clinical features.",
+      "Trained a GRU sequence model on hourly vital signs from each patient's first 24 ICU hours.",
+      "Evaluated discrimination, calibration, precision-recall tradeoffs, and clinical utility through Number Needed to Evaluate.",
+    ],
+  },
+  {
+    slug: "seed-free-playlist-replication",
+    title: "Replication of Towards Seed-Free Music Playlist Generation",
+    short:
+      "Replicated and extended seed-free playlist continuation models using a reduced Spotify Million Playlist Dataset.",
+    description:
+      "Replicated the comparison of Weighted Regularized Matrix Factorization (WRMF), Recurrent Neural Collaborative Filtering (RNCF), and Hybrid Recurrent Neural Collaborative Filtering (HRNCF) for automatic playlist continuation with few or no seed tracks.",
+    previewIcon: "fa-brands fa-spotify",
+    tags: ["Python", "Recommender Systems", "Spotify MPD", "Deep Learning"],
+    bullets: [
+      "Reproduced the original performance pattern on a reduced Spotify Million Playlist Dataset under Colab-scale compute constraints.",
+      "Found WRMF strongest when seed tracks were available, RNCF stronger for no-seed playlists, and HRNCF able to combine both advantages.",
+      "Extended the models with playlist text, seed-order scoring, and seed-count-based weighting.",
+      "Observed that playlist text most improved prediction, while seed order was most useful for reducing recommended-song clicks.",
+    ],
+  },
+  {
     slug: "mediaq",
     title: "MediaQ",
     short:
@@ -75,7 +107,7 @@ export const projects = [
     short: "Personal portfolio built with Vite + React.",
     description:
       "My portfolio website.",
-    images: ["/projects/portfolio.jpg"],
+    images: [],
     tags: ["React", "Vite", "Bulma"],
     bullets: [
       "Built a multi-page portfolio for GitHub Pages.",
